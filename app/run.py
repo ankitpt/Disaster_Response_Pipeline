@@ -44,25 +44,38 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/index')
 def index():
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    cat_counts = df[df.columns[4:]].sum()#df.groupby('genre').count()['message']
+    #Finding count of each category and storing their names in a list
+    cat_counts = df[df.columns[4:]].sum()
     cat_names = df[df.columns[4:]].sum().index
-    #print(genre_names)
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+
+    #Finding co-occurrence matrix for each category
     coocc = df[df.columns[4:]].T.dot(df[df.columns[4:]])
+    
+    #Setting diagonal values to 0
     np.fill_diagonal(coocc.values, 0)
-    coocc.values
+
+    #Finding top 20 most occurring pair of categories in message dataset
     top_N = 20
+    
+    #Considering all except first two categories ie related and request as they 
+    #occur too often and are very generic
     ncoocc=coocc.values[2:,2:]
+    
+    #Since co-occurrence matrix is symmteric, we set upper triangular part of 
+    #the matrix to 0  so that we do not consider a pair twice
     iu1 = np.triu_indices(34)
     ncoocc[iu1]=0
+    
+    #Extracting names of concerned categories
     cats_considered=df.columns[6:]
+    
+    #Finding IDs to of top 20 values in co-occurence matrix
     idx = np.argpartition(ncoocc, ncoocc.size - top_N, axis=None)[-top_N:]
 
     results = np.column_stack(np.unravel_index(idx, ncoocc.shape))
 
+
+    
     freq=[]
     cats=[]
     for result in results:
