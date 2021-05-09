@@ -3,8 +3,11 @@
 ### Table of Contents
 
 a. [Project Motivation](#motivation)
+
 b. [File Descriptions](#datadescriptions)
+
 c. [Instructions](#instructions)
+
 d. [Licensing, Authors, and Acknowledgements](#licensing)
 
 ## Project Motivation<a name="motivation"></a>
